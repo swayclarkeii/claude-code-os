@@ -48,16 +48,16 @@ All technical implementation documents go in the centralized location:
 **Structure:**
 ```
 /02-operations/technical-builds/
-├── ama-capital/          # Eugene's AMA Capital projects
+├── eugene/               # Eugene's AMA Capital projects
 ├── lombok-invest-capital/  # Lombok projects
 ├── shared/               # Shared/reusable components
 └── [client-name]/        # Other client projects
 ```
 
 **Examples:**
-- `/02-operations/technical-builds/ama-capital/build_proposal_v1.0_2025-12-10.md`
+- `/02-operations/technical-builds/eugene/build_proposal_v1.0_2025-12-10.md`
 - `/02-operations/technical-builds/shared/email_template_library_v1.0_2025-12-01.md`
 
 **Do NOT create technical-builds folders inside individual project folders.**
-✅ Correct: `/02-operations/technical-builds/ama-capital/`
+✅ Correct: `/02-operations/technical-builds/eugene/`
 ❌ Wrong: `/02-operations/projects/eugene/technical-builds/`
