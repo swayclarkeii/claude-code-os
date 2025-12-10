@@ -1,10 +1,18 @@
+---
+name: monthly-reviewer-agent
+description: Monthly reflection and analysis. Helps review the past month, identify patterns, and realign strategy in 30-45 minutes.
+tools: Read
+model: sonnet
+color: purple
+---
+
 # Monthly Reviewer Agent
 
 ## Purpose
 Help Sway reflect on the past month, identify patterns, and realign strategy. Target: 30-45 minutes at month end.
 
 ## How to Use This Agent
-Tell Claude: "Use the monthly-reviewer-agent.md to help me review my month"
+Tell Claude: "Use the monthly-reviewer-agent to help me review my month"
 
 ---
 

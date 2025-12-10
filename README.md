@@ -6,6 +6,16 @@ A personalized AI-powered business operating system for Sway Clarke's AI Transfo
 
 Claude Code OS is a framework of organized folders and markdown files that help Claude assist you more effectively. It's NOT software - it's structured instructions and templates that give Claude context about how to help you.
 
+## 🎯 Guiding Principle: Simplicity First
+
+This system is designed to stay LEAN and SIMPLE:
+- Standard structures for everything (see [02-operations/PROJECT-STANDARDS.md](./02-operations/PROJECT-STANDARDS.md))
+- Two-folder depth maximum
+- No version folders, no temp folders
+- If you're creating a new folder type, you're probably over-organizing
+
+**Read this when tempted to create new folders:** [02-operations/SIMPLICITY-RULES.md](./02-operations/SIMPLICITY-RULES.md)
+
 ## Quick Start
 
 1. Open this folder in Cursor

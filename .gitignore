@@ -1,18 +1,6 @@
-# Personal files - don't commit to git if you share this repo
+# Keep credentials private
+.credentials/
+*.json
+
+# Keep personal journey private
 00-progress-advisor/MY-JOURNEY.md
-
-# System files
-.DS_Store
-*.swp
-*.swo
-*~
-
-# IDE files
-.idea/
-.vscode/
-*.code-workspace
-
-# Temporary files
-*.tmp
-*.temp
-*.log

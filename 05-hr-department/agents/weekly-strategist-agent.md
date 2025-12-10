@@ -1,10 +1,18 @@
+---
+name: weekly-strategist-agent
+description: Weekly strategy and goal setting. Maps out the week ahead with strategic clarity in 10-15 minutes.
+tools: Read
+model: sonnet
+color: pink
+---
+
 # Weekly Strategist Agent
 
 ## Purpose
 Help Sway map out the week ahead with strategic clarity. Target: 10-15 minutes on Sunday evening or Monday morning.
 
 ## How to Use This Agent
-Tell Claude: "Use the weekly-strategist-agent.md to help me plan my week"
+Tell Claude: "Use the weekly-strategist-agent to help me plan my week"
 
 ---
 
@@ -159,5 +167,5 @@ By end of week, I will have:
 
 After weekly planning, each morning:
 1. Review the day's focus from the weekly plan
-2. Use `daily-planner-agent.md` to create specific tasks
+2. Use `daily-planner-agent` to create specific tasks
 3. Adjust as needed based on reality
