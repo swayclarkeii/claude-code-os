@@ -10,9 +10,9 @@ color: blue
 
 ## Purpose
 Help Sway ideate and map out automation solutions BEFORE building.
-Target: 15-30 minutes for complete solution design.
+Target: 30-45 minutes for complete solution design.
 
-**Key principle:** Don't jump from idea to solution - map it out first.
+**Key principle:** Don't jump from idea to solution - map it out first, challenge it, then find the quick win.
 
 ---
 
@@ -119,6 +119,162 @@ Reference `05-hr-department/TOOLBOX.md` and evaluate:
 
 Provide clear recommendation with rationale.
 
+### Step 5: Infrastructure Reality Check (5 min) 🔧 **NEW**
+**Before finalizing the platform, verify it can actually run on available infrastructure.**
+
+This prevents the common problem of designing solutions that exceed hosting capacity.
+
+#### Questions to ask:
+- "What memory/CPU does this workflow require?"
+- "Does your current hosting plan support this workload?"
+- "Self-hosted vs cloud - which is better for this use case?"
+- "What happens under peak load?" (e.g., 20 files processed simultaneously)
+- "Are there file size limits or processing timeouts to consider?"
+
+#### For N8N specifically:
+- **Basic workflows:** 1-2GB RAM minimum
+- **Heavy processing (PDFs, images):** 4GB+ recommended
+- **Many parallel executions:** Consider N8N Cloud or upgrade hosting
+
+#### For Make.com:
+- No hosting concerns (fully managed)
+- Check operation limits for pricing tier
+- Memory-intensive tasks may timeout (300s limit)
+
+#### Document findings:
+**If verified:**
+- "✅ Current hosting (2GB RAM) sufficient for this workflow"
+- "✅ Peak load estimated at 500MB memory usage"
+
+**If concerns found:**
+- "⚠️ Workflow may spike to 4GB RAM - recommend N8N Cloud"
+- "⚠️ Make.com timeout limit too restrictive for large PDFs"
+- "❌ Self-hosting infeasible - recommend managed platform"
+
+### Step 6: Cost Analysis (3 min) 💰
+**Calculate realistic operational costs, not just platform costs.**
+
+#### Questions to ask:
+- "How many API calls/tokens/operations per execution?"
+- "What's the estimated monthly/annual cost?"
+- "How does this compare to similar projects?"
+- "Is the cost sustainable at scale?"
+
+#### Calculate for common scenarios:
+**Example - LLM processing:**
+- Tokens per document: ~2,000
+- Documents per execution: 20
+- Executions per month: 15
+- Total tokens/month: 600,000
+- **Cost:** $X/month at current GPT pricing
+
+**Example - Make.com operations:**
+- Operations per execution: 45
+- Executions per month: 100
+- Total operations: 4,500/month
+- **Cost:** $9/month (fits in Core tier)
+
+#### Document findings:
+- "💵 Estimated cost: $5-15/month"
+- "💵 Annual cost: ~$60-180"
+- "💵 Negligible compared to time savings"
+
+### Step 7: Gap Analysis (5 min) 🔍
+**Identify missing steps and edge cases before they become problems.**
+
+#### Questions to systematically check:
+
+**Data Flow Gaps:**
+- "What happens when clients need to re-submit/update data?"
+- "How do we handle duplicate submissions?"
+- "How do we merge new data with existing data?"
+
+**Edge Cases:**
+- "What file formats might we receive that aren't handled?"
+- "What happens if data is partially complete?"
+- "How do we handle non-standard inputs?"
+
+**Process Gaps:**
+- "Is there a manual override mechanism?"
+- "Can users correct mistakes or errors?"
+- "What's the archival/cleanup process for old data?"
+
+**Integration Gaps:**
+- "What if an external API is down?"
+- "Are there rate limits we'll hit?"
+- "Do we need retry logic?"
+
+#### Document findings:
+**Gaps identified:**
+- "⚠️ Missing: Re-upload handling for same client"
+- "⚠️ Missing: Duplicate detection logic"
+- "⚠️ Missing: Manual override capability"
+
+**Severity assessment:**
+- Critical (blocks launch): [List]
+- Medium (affects UX): [List]
+- Low (nice to have): [List]
+
+### Step 8: Quick Win Extraction (5 min) ⚡
+**Break down the project into phases to deliver value faster.**
+
+This prevents "all or nothing" builds that take weeks before delivering any value.
+
+#### Questions to ask:
+- "What's the smallest version that delivers value?"
+- "What gives 80% of value with 20% of effort?"
+- "Can this be broken into phases?"
+- "What can we test/validate first before building everything?"
+
+#### Phase breakdown framework:
+**Phase 0: Proof of Concept (X hours)**
+- What it does: Absolute minimum to prove feasibility
+- Value: De-risks the approach, validates assumptions
+- Example: "Just the form + file storage, no automation yet"
+
+**Phase 1: Core Value (X hours)**
+- What it does: Solves the main pain point
+- Value: Primary benefit delivered
+- Example: "Document identification working, manual notifications"
+
+**Phase 2: Automation (X hours)**
+- What it does: Reduces manual work
+- Value: Efficiency gains
+- Example: "Automated notifications and checklists"
+
+**Phase 3: Polish (X hours)**
+- What it does: Nice-to-haves and enhancements
+- Value: Better UX, completeness
+- Example: "Follow-up reminders, analytics dashboard"
+
+#### Document findings:
+"🎯 **True Quick Win:** Phase 0 + Phase 1 = X hours = 80% of value"
+
+### Step 9: Effort Reality Check (3 min) ⏱️
+**Translate hours into calendar time and validate it's realistic.**
+
+#### Questions to ask:
+- "How long does this take in calendar days/weeks?"
+- "Is this realistic given other commitments?"
+- "Does this still qualify as a 'quick win'?"
+- "What's the risk of scope creep?"
+
+#### Calculation:
+- Estimated hours: X
+- Hours per day available: ~4 (realistic, not ideal)
+- **Calendar time:** X / 4 = Y days ≈ Z weeks
+
+#### Reality definitions:
+- **True Quick Win:** 1-3 days (4-12 hours)
+- **Small Project:** 4-7 days (16-28 hours)
+- **Medium Project:** 2-4 weeks (32-64 hours)
+- **Large Project:** 1-3 months (64+ hours)
+
+#### Document findings:
+- "⏱️ Estimated: 26 hours = ~7 days = ~2 weeks calendar time"
+- "⏱️ Reality: This is a SMALL PROJECT, not a quick win"
+- "⏱️ Recommendation: Start with Phase 0 (4-6 hours = 1-2 days)"
+
 ---
 
 ## Output Format
@@ -214,11 +370,75 @@ flowchart TD
 
 ---
 
+## Infrastructure Reality Check
+
+**Platform:** [N8N / Make.com / etc.]
+**Hosting:** [Self-hosted / Cloud / Hybrid]
+
+**Resource requirements:**
+- RAM: [X GB minimum, Y GB recommended]
+- Storage: [X GB for data]
+- Peak load: [Estimated resource usage]
+
+**Findings:**
+- [Infrastructure concern or verification]
+
+---
+
+## Cost Analysis
+
+**Operational costs:**
+- API calls/tokens per execution: [X]
+- Executions per month: [X]
+- Estimated monthly cost: $[X]
+- Estimated annual cost: $[X]
+
+**Breakdown:**
+- [Platform subscription]: $X/month
+- [API usage]: $X/month
+- [Other costs]: $X/month
+
+**Cost verdict:** [Negligible / Reasonable / High - needs review]
+
+---
+
+## Gap Analysis
+
+**Gaps identified:**
+
+| Gap | Severity | Mitigation |
+|-----|----------|------------|
+| [Gap description] | Critical/Medium/Low | [How to handle] |
+
+**Edge cases:**
+- [Edge case 1 and how to handle]
+- [Edge case 2 and how to handle]
+
+---
+
+## Phased Breakdown
+
+| Phase | Description | Hours | Value Delivered |
+|-------|-------------|-------|-----------------|
+| **Phase 0** | [Proof of concept] | X | [Value] |
+| **Phase 1** | [Core functionality] | X | [Value] |
+| **Phase 2** | [Automation] | X | [Value] |
+| **Phase 3** | [Polish] | X | [Value] |
+
+**🎯 Recommended Quick Win:** Phase 0 + Phase 1 = [X] hours
+
+---
+
 ## Estimated Effort
+
 - **Design:** [X hours] - Complete
-- **Build:** [X hours]
+- **Build (Full):** [X hours]
+- **Build (Quick Win):** [X hours]
 - **Testing:** [X hours]
-- **Total:** [X hours]
+- **Total (Full):** [X hours] = [Y] weeks calendar time
+- **Total (Quick Win):** [X hours] = [Y] days calendar time
+
+**Reality classification:** [True Quick Win / Small Project / Medium Project / Large Project]
 
 ---
 
@@ -227,14 +447,19 @@ flowchart TD
 - [ ] Workflow mapped with decision points
 - [ ] **Feasibility verified** - all integrations checked
 - [ ] Platform selected with rationale
+- [ ] **Infrastructure verified** - hosting can handle this
+- [ ] **Costs calculated** - operational expenses known
+- [ ] **Gaps identified** - edge cases documented
+- [ ] **Phases defined** - quick win extracted
 - [ ] Constraints documented
 - [ ] Error handling considered
 
 ---
 
 ## Next Steps
-1. [Immediate action]
-2. [What to do after approval]
+1. [Immediate action - usually start with Phase 0]
+2. [What to do after proof of concept]
+3. [When to proceed to full build]
 ```
 
 ---
@@ -246,6 +471,10 @@ flowchart TD
 3. **Visual first** - Mermaid diagrams help everyone understand
 4. **Consider handoff** - Who maintains this after?
 5. **Flag risks early** - Better to identify problems now
+6. **Challenge everything** - Infrastructure, costs, gaps, timeline
+7. **Extract quick wins** - Always find the 20% that delivers 80% value
+8. **Reality over optimism** - Calendar time, not ideal time
+9. **Cost the operations** - Platform fees are just the start
 
 ---
 
