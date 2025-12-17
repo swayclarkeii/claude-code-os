@@ -167,6 +167,56 @@ When creating v2.0 of a proposal, move v1.0 to `.archive/`:
 
 ---
 
+## ⚠️ File Versioning Protocol (MANDATORY)
+
+**This rule applies to ALL technical build projects and configuration files.**
+
+### When Modifying Configuration Files
+
+**BEFORE modifying ANY configuration file** (JSON, YAML, XML, etc.), you MUST:
+
+1. **Create `.archive/` directory** in the configuration folder (if not exists)
+2. **Copy original file to archive** with version number and date:
+   - Format: `[Original Filename] - v[N] - [DATE].[ext]`
+   - Example: `Lombok Invest Capital (Task 1) 11_12_2025 - v1 - Dec-11-2024.json`
+3. **Rename modified file** with incremented version number:
+   - Example: `Lombok Invest Capital (Task 1) 11_12_2025 - v2 - Dec-11-2024.json`
+4. **Keep all versions** for rollback capability
+
+### Applies To:
+- Apify JSON configurations
+- Make.com blueprints
+- N8N workflow exports
+- API configuration files
+- Database schemas
+- Environment configs
+- Any technical configuration that could break functionality
+
+### Why This Matters:
+- **Rollback capability** - Can revert to any previous version instantly
+- **Change tracking** - Clear history of what changed when
+- **Testing safety** - Test new versions without losing originals
+- **Client confidence** - Show you protect their working systems
+
+### Example Structure:
+```
+/apify-configs/
+├── Config Name - v3 - Dec-12-2024.json  ← Current working version
+└── .archive/
+    ├── Config Name - v1 - Dec-10-2024.json  ← Original
+    └── Config Name - v2 - Dec-11-2024.json  ← Previous version
+```
+
+### Version Number Guidelines:
+- **v1** = Original file (never modified)
+- **v2** = First modification
+- **v3** = Second modification
+- Continue incrementing for each change
+
+**Remember:** This is NON-NEGOTIABLE. Never modify a config file without archiving the original first.
+
+---
+
 ## Key Lessons from Past Projects
 
 ### 1. Phase 0 Alone Often Has No Value

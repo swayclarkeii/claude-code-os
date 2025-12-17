@@ -36,14 +36,25 @@ Tell Claude: "Use the idea-architect-agent to help me plan [your idea]"
 Ask the user:
 - "What problem are we solving?"
 - "Who is this for?" (client name or internal)
+- "Is this for YOUR internal use or for an EXTERNAL CLIENT?" *(Critical: affects architecture choices)*
 - "What triggers this automation?" (manual, scheduled, event-based)
 - "What's the expected output?"
+
+**For visual/document outputs, also ask:**
+- "What format should the final output be?" (PDF, presentation, document, visual)
+- "Do you have branding assets?" (Logo, colors, fonts)
+- "Where should outputs be stored?"
+
+**For platform selection, also ask:**
+- "Do you have existing integrations we should leverage?" (MCPs, authenticated platforms)
+- "What's your subscription tier on relevant platforms?"
 
 **Listen for:**
 - Pain points and current manual processes
 - Volume (how often does this run?)
 - Urgency and timeline
 - Budget constraints
+- Whether this is internal tooling vs client deliverable
 
 ### Step 2: Requirements Mapping (5 min)
 Document clearly:
@@ -56,6 +67,22 @@ Document clearly:
 - "What data format do you receive?"
 - "Where should the output go?"
 - "Any rate limits or API restrictions?"
+
+### Step 2.5: File Storage & Organization (2 min)
+
+**Purpose:** Define where outputs will be stored and how they'll be organized.
+
+**Questions to ask:**
+- "Where should the outputs be saved?"
+- "What folder structure makes sense?"
+- "What's the file naming convention?"
+- "How will versions be tracked?"
+
+**Document:**
+- **Storage location:** `/path/to/outputs/`
+- **Folder structure:** `[project]/[output-type]/`
+- **Naming convention:** `name_v{version}_{date}.{ext}`
+- **Version control:** Major.minor with archive folder
 
 ### Step 3: Workflow Design (10 min)
 Create a Mermaid flowchart showing:
@@ -109,6 +136,105 @@ Use WebFetch to verify from official documentation.
 - "❌ This integration doesn't exist - recommend alternative"
 
 **Stop here if unfeasible.** Ask user or recommend alternative platform before proceeding.
+
+### Step 3.6: Architecture Simplification Check (3 min) 🎯 **NEW**
+
+**Purpose:** Before recommending automation platforms, check if we can eliminate middleware entirely.
+
+#### CRITICAL FIRST QUESTION: Who is this for?
+
+| If for... | MCP Approach? | Recommended Path |
+|-----------|---------------|------------------|
+| **Me (internal use)** | ✅ Yes | Direct MCP connection from Claude Code |
+| **External client** | ❌ No | Make.com/n8n (client won't have Claude Code) |
+
+**Ask first:** "Is this automation for your internal use or for an external client?"
+
+#### If internal (MCP viable):
+1. "Is there an existing MCP server that can do this directly?"
+2. "Can we connect Claude Code directly to the target platform without Make.com/n8n?"
+3. "What's the simplest architecture that solves the problem?"
+
+#### Check for existing MCPs:
+```
+# Search for MCP servers that might handle this directly
+# Example: google-slides-mcp, notion-mcp, github-mcp, etc.
+```
+
+#### If external client (MCP not viable):
+- Skip MCP check
+- Proceed directly to Make.com/n8n platform selection
+- Consider: Will client maintain this? What's their technical level?
+
+#### Document findings:
+- "👤 Target user: [Internal / External client]"
+- "✅ Direct MCP available - can eliminate middleware" (internal only)
+- "⚠️ External client - requires standalone automation platform"
+- "💡 Simpler architecture: Claude Code → MCP → Done" (internal only)
+
+**Rationale:** Direct MCP connections are simpler than routing through Make.com or n8n. BUT this only applies to internal tools - clients won't have Claude Code access.
+
+### Step 3.7: Subscription Tier Validation (2 min) 💳 **NEW**
+
+**Purpose:** Validate that subscription tiers support required API features.
+
+#### FIRST: Clarify whose subscription matters
+
+| If for... | Whose subscription? |
+|-----------|---------------------|
+| **Internal use** | Your subscriptions (Sway's accounts) |
+| **External client** | Client's subscriptions OR your accounts on their behalf |
+
+**Ask:** "Whose platform subscriptions will this automation use?"
+
+#### Questions to ask:
+1. "What subscription tier do you/they have for this platform?"
+2. "Does that tier support the API features we need?"
+3. "Are there enterprise-only features we're assuming access to?"
+4. "If client project: Who owns the platform account - you or the client?"
+
+#### Common tier limitations to check:
+- **Canva:** Pro vs Enterprise (Autofill API requires Enterprise)
+- **Gamma:** Free vs Pro (API requires Pro - $18/mo)
+- **Make.com:** Free vs Core vs Pro (operation limits)
+- **n8n:** Cloud vs Self-hosted (feature differences)
+- **Google Workspace:** Personal vs Business (API quotas differ)
+
+#### Document findings:
+- "👤 Account owner: [Me / Client / Shared]"
+- "✅ Current subscription supports required features"
+- "⚠️ Feature requires upgrade: [Free → Pro / Pro → Enterprise]"
+- "❌ Feature unavailable at any tier - need alternative"
+
+**Rationale:** We discovered Canva Pro doesn't support the Autofill API (Enterprise required). Always verify subscription tier capabilities before recommending.
+
+### Step 3.8: Output Platform Selection (3 min) 🎨 **NEW**
+
+**Purpose:** When the solution produces visual deliverables, explicitly choose the output platform.
+
+#### Questions to ask:
+1. "What is the output format?" (Document, Presentation, PDF, Visual design)
+2. "Which platform should generate the output?" (Google Slides, Canva, Gamma, Notion, etc.)
+3. "Template-based or AI-generated content?"
+4. "What branding elements are needed?" (Logo, colors, fonts)
+5. "Where are branding assets stored?"
+
+#### Platform comparison framework:
+
+| Factor | Template-Based (GSlides) | AI-Generated (Gamma) |
+|--------|-------------------------|---------------------|
+| Visual quality | Consistent, your design | AI-designed, variable |
+| Branding control | Full | Partial (themes) |
+| Setup effort | Higher (design template) | Lower |
+| Per-output cost | Free | Included in subscription |
+| Best for | Consistent branded output | Quick impressive visuals |
+
+#### Document findings:
+- "Output platform: [Platform name]"
+- "Approach: [Template-based / AI-generated]"
+- "Branding assets: [Location or 'need to create']"
+
+**Rationale:** The current agent focuses on automation platforms but not output platforms. Visual deliverables need explicit platform selection.
 
 ### Step 4: Platform Recommendation (5 min)
 Reference `05-hr-department/TOOLBOX.md` and evaluate:
@@ -475,6 +601,7 @@ flowchart TD
 7. **Extract quick wins** - Always find the 20% that delivers 80% value
 8. **Reality over optimism** - Calendar time, not ideal time
 9. **Cost the operations** - Platform fees are just the start
+10. **Simplest architecture wins** - Always check if a direct MCP or API connection can eliminate middleware platforms. Fewer moving parts = fewer failure points.
 
 ---
 
