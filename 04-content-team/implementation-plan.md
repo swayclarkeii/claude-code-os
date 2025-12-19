@@ -3,14 +3,51 @@
 ## Department Purpose
 AI-powered content creation for marketing Oloxa.ai across multiple channels (YouTube, social media, blog, etc.).
 
-## Status: LOCKED
-**Unlock when:** You've delivered 2+ client projects and have real case studies to share.
+## Status: ACTIVE (Content Planning Phase)
+**Unlocked:** December 17, 2024
 
-**For Sway:** Your YouTube goal is noted! But first, deliver for Benito and Eugene. Then you'll have actual stories to tell.
+**Current Focus:** Capturing content ideas from meetings, coaching sessions, and client work. Building library of potential content while focusing on client delivery.
+
+**Phase:** Planning & Logging (not production yet)
 
 ---
 
-## What This Department Will Do
+## Current Implementation (Dec 2024)
+
+### Content Ideas Logging System
+
+**Structure:**
+```
+04-content-team/
+├── implementation-plan.md (this file)
+├── planning/
+│   ├── content-ideas-log.md (master log of all content ideas)
+│   └── episode-briefs/ (detailed briefs for episodes in development)
+```
+
+**Workflow:**
+1. **Automatic Capture:** Claude extracts content ideas during meeting/coaching transcript processing
+2. **Logged in One Place:** All ideas go to `planning/content-ideas-log.md`
+3. **"Log Now, Create Later":** Focus on client work, build content library for when ready
+4. **Simple Format:** Hook, Structure, Why It Works, Source Quotes
+
+**Source Material:**
+- Client discovery calls
+- Coaching sessions (Richard, Mara)
+- Proposal presentations
+- Client follow-ups
+- Real business experiences
+
+**Content Themes Emerging:**
+- Process/Systems for small businesses
+- Client psychology and communication
+- Pricing and sales strategy
+- Mindset and growth
+- Technical implementation (AI, automation)
+
+---
+
+## What This Department Will Do (Future)
 
 ### Content Strategy
 - Content calendar planning

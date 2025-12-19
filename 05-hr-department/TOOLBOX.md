@@ -146,10 +146,169 @@ mcp__make__app-module_get({...})
 
 ---
 
+## Workflow Optimization Patterns
+
+**Applies to:** Make.com, N8N, Zapier, GitHub Actions, any workflow platform
+
+### The #1 Optimization: Early Filtering
+
+**Problem:** Processing all items through expensive operations before filtering
+
+```
+❌ INEFFICIENT (what most people build):
+Raw Data (100 items) → API Call (100 ops) → Normalize (100 ops) → Filter → 10 results
+= 200 wasted operations
+
+✅ OPTIMIZED (what you should build):
+Raw Data (100 items) → Filter → 10 items → API Call (10 ops) → Normalize (10 ops)
+= 20 operations (90% savings!)
+```
+
+**Key insight:** Move filters BEFORE expensive operations, not after.
+
+**Typical savings:** 40-70% reduction in operations/costs
+
+**Implementation time:** 1-2 hours
+
+**Risk:** Zero (if verification process followed)
+
+### Three Core Patterns
+
+#### Pattern 1: Early Filtering
+Move basic filters BEFORE expensive operations.
+
+**When to use:**
+- Filter criteria don't require expensive calculations
+- Most items will be filtered out
+- Expensive operations (API calls, normalizations) happen after filter
+
+**Example:**
+```
+Location filter → URL keyword filter → Status filter
+↓ (10 items remain)
+API enrichment → Price normalization → Complex calculations
+```
+
+#### Pattern 2: Redundant Module Removal
+Remove modules that don't affect downstream logic.
+
+**How to identify:**
+- Check if module output is referenced by other modules
+- Verify if module has side effects (writes, emails, etc.)
+- If neither, it's likely redundant
+
+**Impact:** Reduces maintenance complexity + operation count
+
+#### Pattern 3: Filter Logic Splitting
+Split complex filters into early and late stages.
+
+**Structure:**
+```
+Early stage: Basic criteria (location, keywords, status)
+Late stage: Calculated criteria (price after normalization, API-derived data)
+```
+
+**Why it works:** Process fewer items through expensive calculations
+
+### Optimization Methodology
+
+**4-Step Process:**
+
+1. **Map the flow** - List all modules, count operations at each step
+2. **Identify bottlenecks** - Where are most operations happening?
+3. **Calculate savings** - What if we reorder operations?
+4. **Verify results** - PROVE changes don't affect output
+
+### Verification Framework
+
+**CRITICAL:** Always verify optimizations don't change results
+
+**Process:**
+1. Export results BEFORE optimization
+2. Export results AFTER optimization
+3. Compare counts (must match)
+4. Spot check data (must match)
+5. Prove filter equivalence mathematically
+
+**Mathematical Equivalence Example:**
+```
+ORIGINAL: Items → Normalize → Filter(A AND B AND C)
+OPTIMIZED: Items → Filter(A AND B) → Normalize → Filter(C)
+
+PROOF:
+Let A = location filter, B = keyword filter, C = price filter
+Original: (A AND B AND C) after normalization
+Modified: (A AND B) then (C) after normalization
+
+Since A and B are independent of normalization:
+Result is mathematically identical ✓
+```
+
+### Platform-Specific Notes
+
+#### Make.com
+- **Blueprint structure:** Check for nested Router modules (`gateway:CustomRouter`)
+- **Module references:** Different routes use different IDs (`{{23.field}}` vs `{{232.field}}`)
+- **IML filter syntax:** `{"and": true, "conditions": [...]}`
+- **Python automation:** For 10+ module changes, write script to handle nested structures
+
+#### N8N
+- Same optimization patterns apply
+- Filter syntax different (node-based, not IML)
+- Code nodes allow inline JavaScript for complex filters
+- Will document N8N-specific syntax when building N8N projects
+
+#### GitHub Actions
+- Optimization = conditional steps (`if:` clauses)
+- Filter early in workflow to skip expensive steps
+- Use matrix strategies wisely (multiplicative effect)
+
+### Real-World Results
+
+**Lombok Capital Case Study:**
+- Before: 555 credits per run
+- After: 240 credits per run
+- **Savings: 56% (315 credits)**
+- Time to optimize: 2 hours
+- Verification: ✓ Same 15 results before/after
+
+**Key lesson:** One optimization pays for itself immediately, benefits compound forever
+
+### Client Communication
+
+**Present in business terms:**
+❌ Don't say: "282 operations on normalize module creating inefficiency"
+✅ Do say: "We can reduce costs from $X to $Y per run - 56% savings with zero risk"
+
+**Always include:**
+- Current cost/operations
+- Optimized cost/operations
+- % savings
+- Risk assessment
+- Verification plan
+
+### Quick Decision: When to Optimize?
+
+**YES, optimize when:**
+- Workflow runs frequently (>10 times/month)
+- Contains expensive operations
+- Processing 50+ items through sequential steps
+- Budget/cost is a client concern
+
+**NO, skip when:**
+- Workflow runs infrequently (<10 times/month)
+- Operations already low (<50 operations)
+- No expensive operations in flow
+- Client requests fastest build time
+
+---
+
 ## Remember
 
 1. **Check docs first** - Always verify functions exist before recommending
-2. **Cost matters** - Make.com operations add up fast
+2. **Cost matters** - Make.com operations add up fast; optimize BEFORE building
 3. **Client handoff** - If client needs to maintain, prioritize simplicity
 4. **Start simple** - Don't over-engineer; complexity can be added later
 5. **Lombok lesson** - When HTML parsing + memory needs exceed Make.com limits, go custom
+6. **Filter early** - Move filters BEFORE expensive operations (40-70% typical savings)
+7. **Verify always** - Prove optimizations don't change results before deploying

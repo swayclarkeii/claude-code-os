@@ -237,11 +237,70 @@ Use WebFetch to verify from official documentation.
 **Rationale:** The current agent focuses on automation platforms but not output platforms. Visual deliverables need explicit platform selection.
 
 ### Step 4: Platform Recommendation (5 min)
+
+#### CRITICAL: Check for Split & Merge Requirements First
+
+**Before comparing costs or features, identify if the workflow requires split-and-merge logic:**
+
+1. **Does the workflow need to:**
+   - Split paths based on data type/condition?
+   - Process each path differently?
+   - **Merge paths back together** into a single stream?
+
+2. **Platform capabilities:**
+
+| Platform | Split Capability | Merge Capability | Notes |
+|----------|-----------------|------------------|-------|
+| **N8N** | ✅ Yes (Switch/IF nodes) | ✅ Yes (Merge node) | Native merge support |
+| **Make.com** | ✅ Yes (Router module) | ❌ **NO native merge** | [Workarounds only](https://community.make.com/t/merge-routes/36234) |
+| **GitHub Actions** | ✅ Yes (matrix/conditions) | ⚠️ Limited | Sequential only |
+| **Custom Code** | ✅ Yes | ✅ Yes | Full control |
+
+**If workflow requires merge:** N8N is strongly recommended despite higher cost. Make.com workarounds (data stores, webhooks, variables) add complexity and fragility.
+
+**Research sources:**
+- Make.com community confirms no native merge: [discussion](https://community.make.com/t/merge-routes/36234)
+- N8N comparison highlights merge as key advantage: [comparison](https://softailed.com/blog/n8n-vs-make)
+
+#### Client Deployment: Cloud vs Self-Hosted
+
+**CRITICAL DECISION:** Is this for internal use or external client?
+
+| Scenario | N8N Recommendation | Make.com Recommendation |
+|----------|-------------------|------------------------|
+| **Internal use (you)** | Self-hosted OK (~€10/mo) | Core tier (€18/mo) |
+| **External client** | **N8N Cloud ONLY** (~€50/mo) | Core/Pro tier (€18-29/mo) |
+
+**Self-hosted N8N is NEVER recommended for client deployments** because:
+- Clients need managed solutions with SLAs
+- No self-hosting expertise expected
+- Support and reliability requirements
+- You won't maintain their infrastructure
+
+**N8N Cloud Pricing (for clients):**
+- Starter: 2,500 ops/mo @ ~€20/mo
+- Pro: 10,000 ops/mo @ ~€50/mo
+- Advanced: 50,000 ops/mo @ ~€200/mo
+
+**Make.com Pricing (for clients):**
+- Free: 1,000 ops/mo @ €0
+- Core: 10,000 ops/mo @ €18/mo
+- Pro: 20,000 ops/mo @ €29/mo
+
+#### Platform Decision Framework
+
 Reference `05-hr-department/TOOLBOX.md` and evaluate:
-- **Cost:** What's the budget? Operations volume?
-- **Complexity:** How complex is the logic?
-- **Integrations:** Are brand nodes available?
-- **Handoff:** Will client maintain this?
+
+1. **Split & Merge?** → If yes, strongly prefer N8N
+2. **Client or Internal?** → If client, use Cloud (never self-hosted)
+3. **Cost:** What's the budget? Operations volume?
+4. **Complexity:** How complex is the logic?
+5. **Integrations:** Are required nodes/modules available?
+6. **Handoff:** Will client maintain this?
+
+**Cost vs Architecture Trade-off:**
+- If Make.com is €384/year cheaper but requires messy workarounds → Pay for N8N's clean architecture
+- If Make.com works cleanly → Choose Make.com and save money
 
 Provide clear recommendation with rationale.
 
