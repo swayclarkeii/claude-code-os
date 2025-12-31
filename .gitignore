@@ -1,5 +1,6 @@
 # Keep credentials private
 .credentials/
+.claude/
 
 # Exclude credentials and sensitive JSON files (add specific patterns as needed)
 # Note: All other JSON files (blueprints, configs, etc.) SHOULD be backed up
