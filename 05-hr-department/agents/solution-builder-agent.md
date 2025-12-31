@@ -685,15 +685,88 @@ If results don't match:
 
 ## MCP Usage Rules
 
-1. **ALWAYS** call get_node/get_module docs BEFORE configuring
-2. **ALWAYS** validate configurations before deployment
-3. **NEVER** assume a function exists - verify first
-4. **ANALYZE** for optimization opportunities before building (Make.com/N8N/workflows)
-5. **VERIFY** results after modifications (compare before/after)
-6. **DOCUMENT** filter logic equivalence for optimizations
-7. **AUTOMATE** complex modifications with Python scripts (when appropriate)
-8. **REFERENCE** TOOLBOX.md for platform-specific patterns
-9. **BACKUP** original blueprints before modifications
+**CRITICAL: ALWAYS Use MCP Server Tools for All Integrations**
+
+1. **ALWAYS** use MCP server tools (`mcp__*__*`) for ALL integrations and external services
+2. **NEVER** use direct API calls (HTTP requests, fetch, etc.) unless **explicitly** requested by Sway
+3. This applies to ALL services: n8n, Make.com, Notion, Google services, GitHub, and any other integrations
+4. **Only use direct API calls when:** Sway explicitly says "use the API directly" or no MCP tool exists
+
+**Integration Best Practices:**
+
+5. **ALWAYS** call get_node/get_module docs BEFORE configuring
+6. **ALWAYS** validate configurations before deployment
+7. **NEVER** assume a function exists - verify first
+8. **ANALYZE** for optimization opportunities before building (Make.com/N8N/workflows)
+9. **VERIFY** results after modifications (compare before/after)
+10. **DOCUMENT** filter logic equivalence for optimizations
+11. **AUTOMATE** complex modifications with Python scripts (when appropriate)
+12. **REFERENCE** TOOLBOX.md for platform-specific patterns
+13. **BACKUP** original blueprints before modifications
+
+### n8n MCP Command Reference
+
+**CRITICAL**: ALWAYS use `mcp__n8n-mcp__*` tools for ALL n8n operations. NEVER use direct n8n API calls - they erase credentials.
+
+#### Always Check Documentation First
+
+When unsure about command syntax:
+```
+mcp__n8n-mcp__tools_documentation(
+  topic: "n8n_update_partial_workflow",
+  depth: "full"
+)
+```
+
+#### Common Mistakes to AVOID
+
+- ❌ Using `sourceNode` and `targetNode` (WRONG)
+- ❌ Using `sourceOutput: 0` as number (WRONG)
+- ❌ Guessing parameter names instead of checking docs
+
+#### Correct Connection Syntax
+
+**Adding connections between nodes:**
+```javascript
+{
+  "type": "addConnection",
+  "source": "Loop Subfolders",        // Exact source node name (case-sensitive)
+  "sourceOutput": "done",             // Output name as STRING
+  "target": "List All Folders",       // Exact target node name
+  "targetInput": "main"               // Input name as STRING
+}
+```
+
+**Key Rules:**
+- ✅ Use `source` and `target` (not `sourceNode`/`targetNode`)
+- ✅ Use string values for outputs/inputs: `"main"`, `"done"` (not numbers)
+- ✅ Node names are case-sensitive and must match exactly
+
+#### Important n8n Workflow Patterns
+
+**splitInBatches Loop Limitation:**
+- `$('NodeName').all()` DOES NOT work inside splitInBatches loops
+- It only returns the **last iteration**, not accumulated data
+- **Solution**: Use a separate node to fetch all data after loops complete
+
+**Google Drive Search Scoping:**
+- ALWAYS scope searches to specific folders using `folderId` parameter
+- Use `recursive: true` to get all subfolders
+- Prevents searching entire My Drive (performance issue)
+
+**Example - Scoped folder search:**
+```javascript
+{
+  "folderId": {
+    "__rl": true,
+    "value": "={{$('Create Root Folder').first().json.id}}",
+    "mode": "id"
+  },
+  "options": {
+    "recursive": true
+  }
+}
+```
 
 ---
 

@@ -122,7 +122,20 @@ START: What are you building?
 
 ## MCP Access Reference
 
+**CRITICAL**: ALWAYS use MCP server tools (`mcp__*__*`) for ALL integrations. NEVER use direct API calls unless explicitly requested - they can erase credentials.
+
 ### N8N MCP
+
+#### Always Check Documentation First
+When unsure about command syntax:
+```
+mcp__n8n-mcp__tools_documentation(
+  topic: "n8n_update_partial_workflow",
+  depth: "full"
+)
+```
+
+#### Common MCP Tools
 ```
 # Search for nodes
 mcp__n8n-mcp__search_nodes({query: "webhook"})
@@ -130,8 +143,64 @@ mcp__n8n-mcp__search_nodes({query: "webhook"})
 # Get full documentation
 mcp__n8n-mcp__get_node({nodeType: "nodes-base.webhook", mode: "docs"})
 
+# Get workflow data
+mcp__n8n-mcp__n8n_get_workflow({id: "workflowId", mode: "full"})
+
+# Update workflow (partial updates)
+mcp__n8n-mcp__n8n_update_partial_workflow({id: "...", operations: [...]})
+
 # Validate before building
-mcp__n8n-mcp__validate_node({nodeType: "...", config: {...}})
+mcp__n8n-mcp__validate_node({nodeType: "...", config: {...}, mode: "full"})
+mcp__n8n-mcp__validate_workflow({workflow: {...}})
+```
+
+#### CRITICAL: n8n_update_partial_workflow Syntax
+
+**Common Mistakes to AVOID:**
+- ❌ Using `sourceNode` and `targetNode` (WRONG)
+- ❌ Using `sourceOutput: 0` as number (WRONG)
+- ❌ Guessing parameter names instead of checking docs
+
+**Correct Syntax for Connections:**
+```javascript
+{
+  "type": "addConnection",
+  "source": "Node Name",           // Exact source node name (case-sensitive)
+  "sourceOutput": "done",          // Output name as STRING ("main", "done", etc.)
+  "target": "Another Node",        // Exact target node name
+  "targetInput": "main"            // Input name as STRING (usually "main")
+}
+```
+
+**Key Rules:**
+- ✅ Use `source` and `target` (not `sourceNode`/`targetNode`)
+- ✅ Use string values for outputs/inputs: `"main"`, `"done"` (not numbers)
+- ✅ Node names are case-sensitive and must match exactly
+
+#### Important n8n Workflow Patterns
+
+**splitInBatches Loop Limitation:**
+- `$('NodeName').all()` DOES NOT work inside splitInBatches loops
+- It only returns the **last iteration**, not accumulated data
+- **Solution**: Use a separate node to fetch all data after loops complete
+
+**Google Drive Search Scoping:**
+- ALWAYS scope searches to specific folders using `folderId` parameter
+- Use `recursive: true` to get all subfolders
+- Prevents searching entire My Drive (performance issue with 70K+ files)
+
+**Example - Scoped folder search:**
+```javascript
+{
+  "folderId": {
+    "__rl": true,
+    "value": "={{$('Create Root Folder').first().json.id}}",
+    "mode": "id"
+  },
+  "options": {
+    "recursive": true
+  }
+}
 ```
 
 ### Make.com MCP
@@ -141,7 +210,31 @@ mcp__n8n-mcp__validate_node({nodeType: "...", config: {...}})
 mcp__make__scenarios_list({teamId: ...})
 
 # Get module info
-mcp__make__app-module_get({...})
+mcp__make__app-module_get({
+  organizationId: 435122,
+  appName: "airtable",
+  appVersion: 1,
+  moduleName: "CreateARecord",
+  format: "instructions"
+})
+
+# List available modules for an app
+mcp__make__app-modules_list({
+  organizationId: 435122,
+  appName: "airtable",
+  appVersion: 1
+})
+
+# Validate module configuration
+mcp__make__validate_module_configuration({
+  organizationId: 435122,
+  teamId: ...,
+  appName: "airtable",
+  appVersion: 1,
+  moduleName: "CreateARecord",
+  parameters: {...},
+  mapper: {...}
+})
 ```
 
 ---

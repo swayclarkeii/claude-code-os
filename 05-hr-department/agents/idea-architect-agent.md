@@ -236,6 +236,39 @@ Use WebFetch to verify from official documentation.
 
 **Rationale:** The current agent focuses on automation platforms but not output platforms. Visual deliverables need explicit platform selection.
 
+### Step 3.13: Advanced Architecture Check (2 min) 🏗️ **NEW**
+
+**Purpose:** Identify if the workflow requires advanced patterns beyond basic automation.
+
+**When your workflow involves ANY of these, consult the [Advanced Architecture Patterns](advanced-architecture-patterns.md) guide:**
+
+- ⚙️ **Modular chunks** (20+ nodes or 5+ logical sections) → Pattern 1
+- 📊 **Multiple AI analyses on same content** → Pattern 2
+- 🔍 **Document/data extraction with OCR** → Pattern 3
+- 🔄 **One-time setup or idempotent operations** → Pattern 4
+- 💾 **State tracking across submissions** → Pattern 5
+- 🚀 **Migrating from existing workflow** → Pattern 6
+- ⚡ **Retry logic for failed operations** → Pattern 7
+- 📁 **File storage with uniqueness needs** → Pattern 8
+- 🔗 **Linking related data over time** → Pattern 9
+- ✅ **Completion tracking with user notifications** → Pattern 10
+
+#### Quick decision:
+```
+Simple automation (1-3 steps, no state)?
+  → Stay in main agent workflow
+
+Complex automation (multiple chunks, state, migration)?
+  → Use advanced patterns guide for detailed implementation strategies
+```
+
+#### Document findings:
+- "Advanced patterns needed: [Yes/No]"
+- "Patterns to use: [List pattern numbers]"
+- "Complexity level: [Simple / Medium / Complex]"
+
+**Rationale:** V3.5 Document Organizer revealed 10 advanced patterns not covered in the main agent. Rather than bloat this guide, separate advanced patterns into modular reference.
+
 ### Step 4: Platform Recommendation (5 min)
 
 #### CRITICAL: Check for Split & Merge Requirements First
