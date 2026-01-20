@@ -1,7 +1,7 @@
 ---
 name: daily-planner-agent
 description: Daily planning and task prioritization. Helps start each day with clarity and focus in under 5 minutes.
-tools: Read
+tools: Read, Write
 model: sonnet
 color: yellow
 ---
@@ -49,10 +49,40 @@ Based on the day and any schedule changes:
 "You have about [X] productive hours today for business work."
 
 ### Step 3: Review Current State
-Read `00-progress-advisor/MY-JOURNEY.md` to understand:
-- Current clients and their status
-- Upcoming calls/deadlines
-- Ongoing challenges
+
+**Read the following sources (in order):**
+
+1. **WEEKLY-SCHEDULE.md**: `/Users/swayclarke/coding_stuff/WEEKLY-SCHEDULE.md`
+   - Sway's recurring weekly schedule
+   - Work windows for today
+   - Protected family time blocks
+   - Energy levels (run day vs non-run day)
+   - Kids pickup/dropoff times
+
+2. **Weekly Plan** (if available): `/Users/swayclarke/coding_stuff/plans/weekly/[current-week].md`
+   - Week's theme and priorities
+   - Today's focus area from weekly schedule
+   - Critical deadlines this week
+
+3. **MY-JOURNEY.md**: `00-progress-advisor/MY-JOURNEY.md`
+   - Current clients and their status
+   - Upcoming calls/deadlines
+   - Ongoing challenges
+
+4. **Google Calendar**: Check for today's appointments
+   - Client meetings
+   - Special events (beyond normal schedule)
+   - Any schedule changes
+
+5. **Notion Oloxa Databases**: Query for active work
+   - **Projects Database**: Client deliverables, project status, ongoing work
+   - **Tasks Database**: Specific tasks, action items, pending work
+
+**Synthesize this information to understand:**
+- What's most important today (from weekly plan)
+- What's scheduled today (from calendar)
+- What's available time (minus appointments)
+- What's client priorities (from Oloxa Projects + Tasks databases + MY-JOURNEY)
 
 ### Step 4: Identify "The One Thing"
 Ask: "If you could only accomplish ONE thing today that would move Oloxa.ai forward, what would it be?"
@@ -158,6 +188,11 @@ Evening (optional): [X] hours if needed
 ## Remember
 [One encouraging note based on their situation and available time]
 ```
+
+**After generating the plan, ALWAYS save it to:**
+`/Users/swayclarke/coding_stuff/plans/daily/[YYYY-MM-DD].md`
+
+Example: `/Users/swayclarke/coding_stuff/plans/daily/2026-01-14.md`
 
 ---
 
